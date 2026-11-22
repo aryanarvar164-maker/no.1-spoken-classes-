@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --header-h: 4.75rem;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+  body {
+    @apply bg-cream font-sans text-teal antialiased;
+    overflow-x: clip;
+  }
+  /* Set before paint by layout.tsx; Motion.tsx removes it. Prevents a flash of the hero before its entrance. */
+  .motion [data-hero] { visibility: hidden; }
+  section[id] { scroll-margin-top: var(--header-h); }
+  ::selection { @apply bg-marigold text-teal; }
+  :focus-visible {
+    outline: 3px solid theme("colors.marigold");
+    outline-offset: 3px;
+  }
+  h1, h2, h3 { text-wrap: balance; }
+}
+
+@layer components {
+  .container-site { @apply mx-auto w-full max-w-site px-5 sm:px-8 lg:px-10; }
+
+  .eyebrow { @apply text-sm font-bold uppercase tracking-[0.12em] text-teal-muted; }
+  .display { @apply font-display font-normal uppercase; }
+
+  /* Signboard buttons: solid fill, 2px teal border, hard offset shadow that "presses" on click */
+  .btn {
+    @apply inline-flex min-h-[48px] items-center justify-center gap-2 border-2 border-teal px-6 text-base font-bold transition-[transform,box-shadow,background-color,color] duration-150 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-primary { @apply btn bg-red text-white shadow-hard hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-hard-lg active:translate-x-0.5 active:translate-y-0.5 active:shadow-none; }
+  .btn-secondary { @apply btn bg-cream text-teal hover:bg-cream-200; }
+  .btn-dark { @apply btn bg-teal text-cream hover:bg-teal-700; }
+  .btn-on-dark { @apply btn border-cream bg-transparent text-cream hover:bg-cream hover:text-teal; }
+
+  .badge { @apply inline-flex items-center border-2 border-teal px-3 py-1 text-[0.8rem] font-bold uppercase tracking-[0.08em]; }
+
+  .card { @apply border-2 border-teal bg-white shadow-hard; }
+
+  /* Placeholder marker — anything wrapped in [brackets] in content/site.ts */
+  .ph {
+    @apply px-0.5 outline-dashed outline-2 outline-offset-2 outline-flag/70;
+    background: color-mix(in srgb, theme("colors.flag") 10%, transparent);
+  }
+
+  .field {
+    @apply block w-full rounded-none border-2 border-teal bg-white px-4 py-3 text-base text-teal placeholder:text-teal-muted/60 transition focus:outline-none focus:ring-4 focus:ring-marigold/50;
+  }
+  .field[aria-invalid="true"] { @apply border-red focus:ring-red/25; }
+  .field-select {
+    @apply appearance-none bg-no-repeat pr-10;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%230E3B3D' stroke-width='2'/%3E%3C/svg%3E");
+    background-size: 12px 8px;
+    background-position: right 1rem center;
+  }
+
+  /* Halftone dots used behind the portrait, like printed signage */
+  .halftone {
+    background-color: theme("colors.marigold");
+    background-image: radial-gradient(rgba(14, 59, 61, 0.55) 1.4px, transparent 1.6px);
+    background-size: 12px 12px;
+  }
+
+  /* Custom cursor: native cursor hidden only once Cursor.tsx is active (fine pointers, motion allowed). */
+  .has-cursor, .has-cursor * { cursor: none !important; }
+  .has-cursor input, .has-cursor textarea, .has-cursor select { cursor: auto !important; }
+
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+}
