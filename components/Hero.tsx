@@ -1,7 +1,7 @@
-import { site } from "@/content/site";
+import type { SiteContent } from "@/content/site";
 import { Copy, EnquireButton, Media } from "./ui";
 
-export default function Hero() {
+export default function Hero({ site }: { site: SiteContent }) {
   const { tutor } = site;
   return (
     <section id="top" aria-labelledby="hero-title" className="relative">
@@ -67,7 +67,7 @@ export default function Hero() {
                 <dt className="text-[0.95rem]">{s.label}</dt>
                 <dd className="font-display text-4xl text-marigold sm:text-5xl">
                   {s.value === null ? (
-                    <span className="ph text-cream/70" title="Add a verified number in content/site.ts">
+                    <span className="ph text-cream/70" title="Add a verified number in the owner editor">
                       —
                     </span>
                   ) : (

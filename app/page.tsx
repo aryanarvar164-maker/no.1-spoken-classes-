@@ -10,22 +10,25 @@ import Footer from "@/components/Footer";
 import Motion from "@/components/Motion";
 import Cursor from "@/components/Cursor";
 import Marquee from "@/components/Marquee";
+import { getContent } from "@/lib/content";
 
-export default function Home() {
+export default async function Home() {
+  // Cached; refreshed instantly whenever the owner saves in the editor.
+  const site = await getContent();
   return (
     <>
-      <Header />
+      <Header site={site} />
       <main id="main">
-        <Hero />
+        <Hero site={site} />
         <Marquee />
-        <VideoSection />
-        <About />
-        <Achievements />
-        <Batches />
-        <Gallery />
-        <Enquiry />
+        <VideoSection site={site} />
+        <About site={site} />
+        <Achievements site={site} />
+        <Batches site={site} />
+        <Gallery site={site} />
+        <Enquiry site={site} />
       </main>
-      <Footer />
+      <Footer site={site} />
       <Motion />
       <Cursor />
     </>

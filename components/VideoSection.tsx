@@ -1,9 +1,9 @@
-import { site } from "@/content/site";
+import type { SiteContent } from "@/content/site";
 import { Copy, Media, SectionHeading } from "./ui";
 import VideoPlayer from "./VideoPlayer";
 import { cldImage, cldVideo, cldVideoPoster, toPublicId } from "@/lib/cloudinary";
 
-export default function VideoSection() {
+export default function VideoSection({ site }: { site: SiteContent }) {
   const { video } = site;
   const videoId = toPublicId(video.src);
   const posterId = toPublicId(video.poster.src);
@@ -46,7 +46,7 @@ export default function VideoSection() {
                         <path d="M4 2.5v11l9-5.5z" fill="currentColor" />
                       </svg>
                     </span>
-                    <span className="ph text-sm text-cream">[Add coaching video in content/site.ts]</span>
+                    <span className="ph text-sm text-cream">[Add the coaching video in the owner editor]</span>
                   </div>
                 </div>
               </div>

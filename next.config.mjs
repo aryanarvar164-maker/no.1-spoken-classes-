@@ -15,6 +15,15 @@ const nextConfig = {
   async headers() {
     return [
       {
+        // Private owner editor: never indexed, never cached, never leaks its URL via Referer.
+        source: "/owner/:path*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "Cache-Control", value: "no-store" },
+        ],
+      },
+      {
         source: "/(.*)",
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },

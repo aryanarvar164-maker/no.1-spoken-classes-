@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { isPlaceholder, site, type ImageAsset } from "@/content/site";
+import { isPlaceholder, type ImageAsset } from "@/content/site";
 import { toPublicId } from "@/lib/cloudinary";
 import CldImage from "./CldImage";
 
@@ -10,7 +10,7 @@ export { cx };
 export function Copy({ value, className }: { value: string; className?: string }) {
   if (isPlaceholder(value)) {
     return (
-      <span className={cx("ph", className)} title="Placeholder — replace in content/site.ts">
+      <span className={cx("ph", className)} title="Placeholder — replace it in the owner editor">
         {value}
       </span>
     );
@@ -18,8 +18,8 @@ export function Copy({ value, className }: { value: string; className?: string }
   return <span className={className}>{value}</span>;
 }
 
-export function DraftChip() {
-  if (!site.showContentFlags) return null;
+export function DraftChip({ show }: { show: boolean }) {
+  if (!show) return null;
   return (
     <span className="ml-2 inline-block border border-flag px-1.5 py-0.5 align-middle font-sans text-[0.6rem] font-bold uppercase tracking-widest text-flag">
       Draft

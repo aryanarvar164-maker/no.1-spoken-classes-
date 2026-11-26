@@ -1,8 +1,8 @@
-import { isPlaceholder, site } from "@/content/site";
+import { isPlaceholder, type SiteContent } from "@/content/site";
 import { Copy } from "./ui";
 import EnquiryForm from "./EnquiryForm";
 
-export default function Enquiry() {
+export default function Enquiry({ site }: { site: SiteContent }) {
   const c = site.contact;
   return (
     <section id="enquiry" aria-labelledby="enquiry-title" className="py-20 md:py-28">
@@ -59,7 +59,7 @@ export default function Enquiry() {
         </div>
 
         <div className="relative lg:col-span-7" data-reveal>
-          <EnquiryForm />
+          <EnquiryForm batches={site.batches} preferredTimes={site.preferredTimes} />
         </div>
       </div>
     </section>

@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { isPlaceholder, nav, site } from "@/content/site";
+import { isPlaceholder, nav, type SiteContent } from "@/content/site";
 import { cx } from "./ui";
 
-export default function Header() {
+export default function Header({ site }: { site: SiteContent }) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string>("");
 
@@ -39,9 +39,6 @@ export default function Header() {
 
   return (
     <>
-      {/* Info bar — scrolls away; only the main bar below is sticky */}
-      
-
       <header className="sticky top-0 z-50 border-b-2 border-teal bg-cream">
         <div className="container-site flex h-[var(--header-h)] items-center justify-between gap-5">
           <a href="#top" className="flex items-center gap-3" onClick={() => setOpen(false)}>

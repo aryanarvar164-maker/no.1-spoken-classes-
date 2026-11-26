@@ -1,4 +1,4 @@
-import { site, type BatchStatus } from "@/content/site";
+import type { BatchStatus, SiteContent } from "@/content/site";
 import { Copy, SectionHeading, cx } from "./ui";
 
 const statusMeta: Record<BatchStatus, { label: string; head: string }> = {
@@ -8,7 +8,7 @@ const statusMeta: Record<BatchStatus, { label: string; head: string }> = {
   full: { label: "Batch full", head: "bg-cream-300" },
 };
 
-export default function Batches() {
+export default function Batches({ site }: { site: SiteContent }) {
   return (
     <section id="batches" aria-labelledby="batches-heading" className="border-y-2 border-teal bg-cream-200 py-20 md:py-28">
       <div className="container-site">

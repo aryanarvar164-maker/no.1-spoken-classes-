@@ -1,7 +1,7 @@
-import { site } from "@/content/site";
+import type { SiteContent } from "@/content/site";
 import { Copy, DraftChip, EnquireButton, SectionHeading } from "./ui";
 
-export default function About() {
+export default function About({ site }: { site: SiteContent }) {
   const { about, tutor } = site;
   return (
     <section id="about" aria-labelledby="about-title" className="border-y-2 border-teal bg-cream-200 py-20 md:py-28">
@@ -37,7 +37,7 @@ export default function About() {
               <span className="font-display text-5xl text-red">0{i + 1}</span>
               <h4 className="mt-5 text-xl font-bold leading-snug">
                 {p.title}
-                {p.draft && <DraftChip />}
+                {p.draft && <DraftChip show={site.showContentFlags} />}
               </h4>
               <p className="mt-2 leading-relaxed text-teal-muted">{p.text}</p>
             </li>

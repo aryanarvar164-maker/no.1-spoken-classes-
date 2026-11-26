@@ -1,7 +1,7 @@
-import { site } from "@/content/site";
+import type { SiteContent } from "@/content/site";
 import { Copy, Media, SectionHeading } from "./ui";
 
-export default function Achievements() {
+export default function Achievements({ site }: { site: SiteContent }) {
   return (
     <section id="achievements" aria-labelledby="achievements-heading" className="py-20 md:py-28">
       <div className="container-site">

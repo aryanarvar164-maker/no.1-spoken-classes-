@@ -1,7 +1,7 @@
-import { nav, site } from "@/content/site";
+import { nav, type SiteContent } from "@/content/site";
 import { Copy } from "./ui";
 
-export default function Footer() {
+export default function Footer({ site }: { site: SiteContent }) {
   return (
     <footer className="border-t-2 border-teal bg-teal-900 text-cream">
       <div className="container-site py-16">
@@ -50,14 +50,46 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col justify-between gap-3 border-t border-cream/20 pt-6 text-xs text-cream/60 sm:flex-row">
-          <p>
-            © {new Date().getFullYear()} {site.name}. All rights reserved.
-          </p>
-          <a href="#top" className="hover:text-cream">
-            Back to top ↑
-          </a>
-        </div>
+
+        
+<div className="mt-12 flex flex-col justify-between gap-5 border-t border-cream/20 pt-6 text-xs text-cream/60 sm:flex-row sm:items-center">
+  
+
+  {/* Developer profile - centered */}
+  <div className="flex items-center gap-3">
+    <img
+      src="../media/aryan-profile.png"
+      alt="Aryan Narvar"
+      className="h-10 w-10 rounded-full border border-cream/30 object-cover"
+    />
+
+    <div>
+      <p className="text-[11px] text-cream/60">
+        Designed & Developed by
+      </p>
+      <a
+        href="https://www.linkedin.com/in/aryan-narvar-457937405/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="font-semibold text-cream transition-colors hover:text-marigold"
+      >
+        Aryan Narvar ↗
+      </a>
+    </div>
+  </div>
+
+  <a href="#top" className="hover:text-cream">
+    Back to top ↑
+  </a>
+</div>
+
+<div className="mt-6 flex flex-col justify-between gap-5 border-t border-cream/20 pt-6 text-xs text-cream/60 sm:flex-row sm:items-center">
+  <p>
+    © {new Date().getFullYear()} {site.name}. All rights reserved.
+  </p>
+  </div>
+
+
       </div>
     </footer>
   );

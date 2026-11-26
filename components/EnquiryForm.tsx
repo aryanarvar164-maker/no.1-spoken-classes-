@@ -1,19 +1,21 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { site } from "@/content/site";
+import type { SiteContent } from "@/content/site";
 import { enquirySchema, type EnquiryResponse } from "@/lib/enquiry-schema";
 import { cx } from "./ui";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
-const batchLabel = (id: string) => {
-  const b = site.batches.find((x) => x.id === id);
+type Batches = SiteContent["batches"];
+
+const batchLabel = (batches: Batches, id: string) => {
+  const b = batches.find((x) => x.id === id);
   if (!b) return id;
   return [b.title, b.level, b.schedule].filter(Boolean).join(" · ");
 };
 
-export default function EnquiryForm() {
+export default function EnquiryForm({ batches, preferredTimes }: { batches: Batches; preferredTimes: string[] }) {
   const uid = useId();
   const formRef = useRef<HTMLFormElement>(null);
   const startedAt = useRef<number>(0);
@@ -42,7 +44,7 @@ export default function EnquiryForm() {
       name: String(fd.get("name") ?? ""),
       phone: String(fd.get("phone") ?? ""),
       email: String(fd.get("email") ?? ""),
-      batch: batch ? batchLabel(batch) : "",
+      batch: batch ? batchLabel(batches, batch) : "",
       preferredTime: String(fd.get("preferredTime") ?? ""),
       message: String(fd.get("message") ?? ""),
       company: String(fd.get("company") ?? ""),
@@ -147,9 +149,9 @@ export default function EnquiryForm() {
           <label htmlFor={`${uid}-batch`} className="mb-1.5 block text-sm font-semibold">Interested batch</label>
           <select {...f("batch")} value={batch} onChange={(e) => setBatch(e.target.value)} className="field field-select">
             <option value="">Not sure yet</option>
-            {site.batches.map((b) => (
+            {batches.map((b) => (
               <option key={b.id} value={b.id}>
-                {batchLabel(b.id)}
+                {batchLabel(batches, b.id)}
               </option>
             ))}
           </select>
@@ -159,7 +161,7 @@ export default function EnquiryForm() {
           <label htmlFor={`${uid}-preferredTime`} className="mb-1.5 block text-sm font-semibold">Preferred time</label>
           <select {...f("preferredTime")} defaultValue="" className="field field-select">
             <option value="">Any time</option>
-            {site.preferredTimes.map((t) => (
+            {preferredTimes.map((t) => (
               <option key={t} value={t}>{t}</option>
             ))}
           </select>

@@ -5,11 +5,10 @@
  * shared store (e.g. Upstash Redis / Vercel KV) with the same interface.
  */
 const WINDOW_MS = 10 * 60 * 1000; // 10 minutes
-const MAX_HITS = 5;
 
 const hits = new Map<string, number[]>();
 
-export function rateLimit(key: string): { allowed: boolean; retryAfterSec: number } {
+export function rateLimit(key: string, MAX_HITS = 5): { allowed: boolean; retryAfterSec: number } {
   const now = Date.now();
   const recent = (hits.get(key) ?? []).filter((t) => now - t < WINDOW_MS);
 

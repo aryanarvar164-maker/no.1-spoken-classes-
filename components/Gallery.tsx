@@ -1,10 +1,10 @@
-import { site } from "@/content/site";
+import type { SiteContent } from "@/content/site";
 import { Copy, Media, SectionHeading, cx } from "./ui";
 
 // Desktop rhythm: a few wide / tall tiles so the grid doesn't look uniform.
 const spans = ["md:col-span-2 md:row-span-2", "", "", "md:row-span-2", "", "md:col-span-2", "", ""];
 
-export default function Gallery() {
+export default function Gallery({ site }: { site: SiteContent }) {
   return (
     <section id="gallery" aria-labelledby="gallery-heading" className="bg-teal py-20 text-cream md:py-28">
       <div className="container-site">

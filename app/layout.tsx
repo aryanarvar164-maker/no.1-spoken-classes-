@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Anton, Mukta } from "next/font/google";
-import { site } from "@/content/site";
+import { SITE_URL } from "@/content/site";
+import { getContent } from "@/lib/content";
 import "./globals.css";
 
 // Anton: condensed signboard display. Mukta: body text with full Devanagari support for the Hindi lines.
@@ -12,22 +13,25 @@ const sans = Mukta({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
-  title: `${site.name} — ${site.tagline}`,
-  description: site.description,
-  alternates: { canonical: "/" },
-  openGraph: {
-    type: "website",
-    title: site.name,
+export async function generateMetadata(): Promise<Metadata> {
+  const site = await getContent();
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: `${site.name} — ${site.tagline}`,
     description: site.description,
-    url: "/",
-    siteName: site.name,
-    locale: "en_IN",
-  },
-  twitter: { card: "summary_large_image", title: site.name, description: site.description },
-  robots: { index: true, follow: true },
-};
+    alternates: { canonical: "/" },
+    openGraph: {
+      type: "website",
+      title: site.name,
+      description: site.description,
+      url: "/",
+      siteName: site.name,
+      locale: "en_IN",
+    },
+    twitter: { card: "summary_large_image", title: site.name, description: site.description },
+    robots: { index: true, follow: true },
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: "#0E3B3D",
@@ -35,13 +39,14 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const site = await getContent();
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
     name: site.name,
     description: site.description,
-    url: site.url,
+    url: SITE_URL,
     sameAs: [site.contact.instagram],
   };
 

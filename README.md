@@ -41,7 +41,8 @@ Other scripts: `npm run build`, `npm start`, `npm run lint`, `npm run typecheck`
 | `ENQUIRY_TO_EMAIL` | yes, for enquiries | The owner's inbox. Comma-separate for several. |
 | `NEXT_PUBLIC_SITE_URL` | recommended | Production URL, used for SEO / Open Graph |
 | `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` | for Cloudinary media | Your cloud name. The only Cloudinary value the site needs — add it to Vercel too. |
-| `CLOUDINARY_API_KEY` / `CLOUDINARY_API_SECRET` | upload script only | Keep in `.env.local` on your computer. **Do not add to Vercel, never commit, never prefix with `NEXT_PUBLIC_`.** |
+| `CLOUDINARY_API_KEY` / `CLOUDINARY_API_SECRET` | owner editor + upload script | Server-only. Add to `.env.local` **and** Vercel. **Never commit, never prefix with `NEXT_PUBLIC_`.** |
+| `OWNER_SECRET` | owner editor | Long random value (24+ characters). The private editing link is `/owner/<OWNER_SECRET>`. Empty = editor off. |
 
 **Until the three enquiry variables are set, the form does not deliver anything.** The API
 answers `503` and the visitor sees "Online enquiries aren't switched on yet — please call or
@@ -66,7 +67,34 @@ Replace the body of `notifyOwner()` in `lib/notify.ts` with a call to your provi
 
 ## 3. Editing content
 
-**All content is in `content/site.ts`.** No component needs to change to update the site.
+### The owner editor (no code needed)
+
+The owner edits everything — text, contact details, batches, reviews, achievements, photos and the
+video — from a private page:
+
+```
+https://yoursite.com/owner/<OWNER_SECRET>
+```
+
+- Nothing on the public site links to it, and it is marked `noindex` so search engines skip it.
+- There is no login screen: the long secret in the link *is* the key. The server checks it on every
+  page load, save and upload; a wrong link just shows the normal "page doesn't exist" screen.
+- **Anyone who has the link can edit the site.** Send it to the owner privately and ask them to bookmark it.
+  To revoke it (lost phone, shared by mistake), change `OWNER_SECRET` in Vercel and redeploy — the old link stops working.
+- Make a secret with: `node -e "console.log(require('crypto').randomBytes(24).toString('base64url'))"`
+- Press **Save changes** and the live site updates on the next page load. Every save is checked first,
+  so a bad edit can't break the page.
+- Photos and videos upload straight from the editor to Cloudinary. Big phone photos are shrunk to 2400px
+  before upload. Limits: 10 MB per photo, 100 MB per video.
+- **Where saves go:** `no01/site-content.json` in your Cloudinary Media Library. Every save also keeps a
+  dated copy in `no01/content-history/`, so an older version can be restored by downloading it and
+  re-uploading it as `no01/site-content.json` (raw file, overwrite).
+- If two people edit at once, the last save wins.
+
+### Defaults in code
+
+`content/site.ts` holds the starting content. It is used until the owner's first save, and as a fallback if
+Cloudinary can't be reached. Fields the owner has saved always override it.
 
 - Text in `[square brackets]` is a placeholder and shows with a dashed yellow outline on the
   page. Replace each one with verified information from the owner.
@@ -118,7 +146,8 @@ All GSAP code is in `components/Motion.tsx`, driven by data attributes in the ma
 
 1. Push the project to GitHub and import it on vercel.com.
 2. Add `RESEND_API_KEY`, `ENQUIRY_FROM_EMAIL`, `ENQUIRY_TO_EMAIL`, `NEXT_PUBLIC_SITE_URL` and
-   `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` (Production and Preview). Not the Cloudinary key or secret.
+   `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` and `OWNER_SECRET`
+   (Production and Preview).
 3. Deploy, then add the custom domain under Project → Domains.
 4. In Resend, verify the same domain (DNS records) so enquiry emails don't land in spam.
 
@@ -128,7 +157,8 @@ Vercel KV — same function signature.
 
 ## 6. Launch checklist
 
-- [ ] All `[placeholders]` replaced with verified details; `showContentFlags: false`
+- [ ] `OWNER_SECRET` set in Vercel; owner link tested and sent to the owner privately
+- [ ] All `[placeholders]` replaced (owner editor) and "Show Draft labels" turned off
 - [ ] Tutor portrait, logo, classroom photos and film added (with consent for students)
 - [ ] Batches, timings, start dates and mode confirmed with the owner
 - [ ] Enquiry env vars set; test enquiry received in the owner's inbox
@@ -145,9 +175,14 @@ app/
   page.tsx             the one page — section order lives here
   globals.css          design tokens in use, buttons, fields, placeholder marker
   api/enquiry/route.ts POST handler: size check → rate limit → Zod → honeypot → notify
+  owner/[token]/page.tsx   private owner editor (404 unless the secret matches)
+  api/owner/content        save content (secret check → Zod → Cloudinary → refresh cache)
+  api/owner/sign           sign a direct browser → Cloudinary upload
 scripts/
   upload-to-cloudinary.mjs  bulk upload from your computer; prints public IDs
 components/            one file per section + ui.tsx (shared bits) + Motion.tsx
+components/owner/      the editor UI; editor-config.ts lists every editable field
 content/site.ts        ALL editable content
-lib/                   enquiry schema, rate limiter, email notifier, Cloudinary URL helpers
+lib/                   content schema + store, owner secret check, enquiry schema, rate limiter,
+                       email notifier, Cloudinary helpers
 ```
