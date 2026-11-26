@@ -58,7 +58,7 @@ export default function Footer({ site }: { site: SiteContent }) {
   {/* Developer profile - centered */}
   <div className="flex items-center gap-3">
     <img
-      src="../media/aryan-profile.png"
+      src="/images/aryan-profile.png"
       alt="Aryan Narvar"
       className="h-10 w-10 rounded-full border border-cream/30 object-cover"
     />
