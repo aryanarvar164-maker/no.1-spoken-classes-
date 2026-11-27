@@ -8,6 +8,8 @@ next-env.d.ts
 .DS_Store
 .vercel
 cloudinary-ids.json
+.open-next/ 
+.dev.vars
 
 # Originals live on Cloudinary — keep big media out of git
 media/

@@ -9,5 +9,6 @@
     { "binding": "WORKER_SELF_REFERENCE", "service": "no-1-spoken-classes" }
   ],
   "images": { "binding": "IMAGES" },
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+  "keep_vars": true
 }
